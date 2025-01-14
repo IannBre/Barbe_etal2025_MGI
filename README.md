@@ -1,0 +1,1 @@
+Repository to obtained public data of "Managing Felis catus impact on a protected island: Outcomes of an ongoing socio-ecological strategy in the Martín García Island Reserve (Buenos Aires, Argentina)" Barbe, I., Rodríguez-Planes, L., Jacoby, R., Szmelc, A., Domínguez, G., Asín, N., Cueto, M.E., Orozco, M.M. 2025
