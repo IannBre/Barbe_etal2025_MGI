@@ -1,0 +1,87 @@
+---
+title: "Managing Felis catus impact on a protected island: Outcomes of an ongoing socio-ecological strategy in the Martín García Island Reserve (Buenos Aires, Argentina)"
+author: "Ian Barbe, Lucía Inés Rodríguez-Planes, María del Rosario Jacoby, Andrea Szmelc, Gloria Domínguez, Nazareno Asín, María Eugenia Cueto, María Marcela Orozco"
+email: iannbarbe@gmail.com
+year: 2025
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## GitHub Documents
+
+This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+
+## Including Code
+
+You can include R code in the document as follows:
+
+```{r library}
+library(tidyverse)
+library(readxl)
+library(lme4)
+library(ggeffects)
+library(performance)
+library(emmeans) #comparaciones multiples e IC
+library(writexl)
+library(magrittr) #para pipe %>%
+library(MuMIn) #comparacion de modelos con AIC
+library(glmmTMB) #para modelado
+library(MASS) #para binomial negativa en glm
+library(pscl) #para correro Poisson con cero inflado
+library(gridExtra) #fusion de graficos
+library(cowplot) #fusion de graficos
+```
+
+```{r GLMM Felis catus}
+## Cargado de tablas
+
+setwd("E:/Análisis_R/IMG/Barbe_etal2025_MGI")
+
+gatos <- read_excel("E:/Análisis_R/IMG/Barbe_etal2025_MGI\\data/gatos18-21.xlsx") %>%
+  rename(abundancia = 1) %>%
+  mutate(etapa = factor(etapa)) %>%
+  mutate (tasa = abundancia/esfuerzo)%>%
+  filter(zona == "Media")
+
+#Para graficar lo que pasa en zona Baja ---
+gatos_exp <- read_excel("E:/Análisis_R/IMG/Barbe_etal2025_MGI\\data/gatos18-21.xlsx") %>%
+  rename(abundancia = 1) %>%
+  mutate(etapa = factor(etapa)) %>%
+  mutate (tasa = abundancia/esfuerzo)%>%
+  filter(zona != "Alta") %>% 
+  filter(zona == "Baja")
+
+#Convertir etapa as character
+gatos_exp$etapa <- as.character(gatos_exp$etapa)
+class(gatos_exp$etapa)
+gatos_exp$abundancia
+```
+
+## GLMM Felis catus plots
+
+
+```{r GLMM Felis catus plots}
+
+#### Grafico de gatos en BAJA----
+gatos_baja_plot <- gatos_exp %>%
+  ggplot(aes(x = etapa, 
+             y = abundancia)) +
+  geom_point(size=1.5) +
+  geom_line(aes(group=abundancia))+
+  labs(y = "Cat abundance", x = "Year", tag="",
+       title="Low zone")+
+  theme(      plot.tag.position = "topleft", 
+              plot.title = element_text(size = rel(1.5),  face = "plain", hjust=0), 
+              plot.title.position ="panel",
+              axis.text=element_text(size=10,color="black"),
+              axis.title=element_text(size=12,color="black"),
+              panel.background=element_rect(color = "black"),
+              strip.background=element_rect(color = "black"))+
+         ylim(0,3)
+gatos_baja_plot
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
