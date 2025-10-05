@@ -32,19 +32,17 @@ library(pscl)
 library(gridExtra)
 ```
 
-```{r GLMM Felis catus}
-
-setwd("E:/Análisis_R/IMG/Barbe_etal2025_MGI")
+```{r GLMM Sighted cats}
 
 #Medium zone
-cats <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats <- read_excel("R data/Fig3a,b.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
   filter(zone == "Medium")
 
 #Low zone ---
-cats_exp <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats_exp <- read_excel("R data/Fig3a,b.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
@@ -56,7 +54,7 @@ cats_exp$year <- as.character(cats_exp$year)
 class(cats_exp$year)
 cats_exp$abundance
 
-#### GLMM medium zone model----
+#### GLMM medium zone model for sigthed cats----
 
 mod_cats <- glmer(abundance ~ year + (1|transect) + offset(log(effort)),
                    family = "poisson", data = cats)
@@ -94,7 +92,7 @@ mod_cats %>%
 
 ### L. wiegmannii lizard -----
 ```{r lizard GLM}
-l.w_lizard <- read_excel("Fig4.Lw_lizard18-21_GLM.xlsx") %>%
+l.w_lizard <- read_excel("R data/Fig4a.Lw_lizard18-21_GLM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate(index = abundance/effort)
@@ -138,7 +136,7 @@ confint(pairs(emms_lizard))
 
 ### Caprimulgus spp.-----
 ```{r nightjars GLM}
-nightjars <- read_excel("Fig4b.Nightjars18-21_GLM.xlsx") %>% 
+nightjars <- read_excel("R data/Fig4b.Nightjars18-21_GLM.xlsx") %>% 
   rename(abundance = 1) %>%
   mutate(year = factor(year))
 
@@ -169,7 +167,7 @@ confint(pairs(emms_ng))
 ```
 
 ```{r GLMM Tegu lizard}
-tegu <- read_excel("Fig5.Tegu18-21_GLMM.xlsx")%>%
+tegu <- read_excel("R data/Fig5.Tegu18-21_GLMM.xlsx")%>%
   rename(abundance = 1) %>%
   mutate(year = factor(year))
 
@@ -229,7 +227,6 @@ mod_tegu %>%
   
   
 ```
-
 ############### Interviews --------------------------
 ```{r Table5 interviews project need to continue}
 #Table 5. Need to continue the project data ----------------
