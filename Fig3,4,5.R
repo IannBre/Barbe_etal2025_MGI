@@ -1,10 +1,10 @@
----
-title: "Managing Felis catus impact on a protected island: Outcomes of an ongoing socio-ecological strategy in the Martín García Island Reserve (Buenos Aires, Argentina)"
+-------
+title: "Non-lethal management of Felis catus on a protected island: Outcomes of a successful ongoing socio-ecological strategy in Martín García Island Reserve, Argentina"
 author: "Ian Barbe, Lucía Inés Rodríguez-Planes, María del Rosario Jacoby, Andrea Szmelc, Gloria Domínguez, Nazareno Asín, María Eugenia Cueto, María Marcela Orozco"
-email: iannbarbe@gmail.com
+author_email: "iannbarbe@gmail.com"
 year: 2025
 about: "GLM and GLMM cats and fauna analysis"
----
+-------
 
 library(tidyverse)
 library(readxl)
@@ -21,19 +21,19 @@ library(pscl)
 library(gridExtra)
 
 
-# GLMM Felis catus #########################
+# GLMM Sighted cats #########################
 
 setwd("")
 
 #Medium zone
-cats <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats <- read_excel("Fig3.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
   filter(zone == "Medium")
 
 #Low zone ---
-cats_exp <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats_exp <- read_excel("Fig3.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
@@ -45,7 +45,7 @@ cats_exp$year <- as.character(cats_exp$year)
 class(cats_exp$year)
 cats_exp$abundance
 
-##GLMM medium zone model--
+##GLMM medium zone model for sighted cats--
 
 mod_cats <- glmer(abundance ~ year + (1|transect) + offset(log(effort)),
                   family = "poisson", data = cats)

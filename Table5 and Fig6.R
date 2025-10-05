@@ -1,10 +1,10 @@
----
-  title: "Managing Felis catus impact on a protected island: Outcomes of an ongoing socio-ecological strategy in the Martín García Island Reserve (Buenos Aires, Argentina)"
+-------
+title: "Non-lethal management of Felis catus on a protected island: Outcomes of a successful ongoing socio-ecological strategy in Martín García Island Reserve, Argentina"
 author: "Ian Barbe, Lucía Inés Rodríguez-Planes, María del Rosario Jacoby, Andrea Szmelc, Gloria Domínguez, Nazareno Asín, María Eugenia Cueto, María Marcela Orozco"
-email: iannbarbe@gmail.com
+author_email: "iannbarbe@gmail.com"
 year: 2025
 about: "Interviews analisys"
----
+-------
 
 #Table 5. Need to continue the project data###############
 
