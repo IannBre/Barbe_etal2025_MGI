@@ -1,7 +1,7 @@
 -------
 title: "Non-lethal management of Felis catus on a protected island: Outcomes of a successful ongoing socio-ecological strategy in Martín García Island Reserve, Argentina"
 author: "Ian Barbe, Lucía Inés Rodríguez-Planes, María del Rosario Jacoby, Andrea Szmelc, Gloria Domínguez, Nazareno Asín, María Eugenia Cueto, María Marcela Orozco"
-CA_email: "marcelaorozco.vet@gmail.com"
+author_email: "iannbarbe@gmail.com"
 year: 2025
 about: "Interviews analisys"
 -------
