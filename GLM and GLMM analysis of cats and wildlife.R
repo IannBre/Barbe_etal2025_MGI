@@ -1,22 +1,11 @@
----
+-------
 title: "Non-lethal management of Felis catus on a protected island: Outcomes of a successful ongoing socio-ecological strategy in Martín García Island Reserve, Argentina"
 author: "Ian Barbe, Lucía Inés Rodríguez-Planes, María del Rosario Jacoby, Andrea Szmelc, Gloria Domínguez, Nazareno Asín, María Eugenia Cueto, María Marcela Orozco"
-corresponding author email: marcelaorozco.vet@gmail.com
+CA_email: "marcelaorozco.vet@gmail.com"
 year: 2026
-output: github_document
+about: "GLM and GLMM cats and fauna analysis"
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## GitHub Documents
-
-This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
-
-## Including Code
-
-```{r library}
 library(tidyverse)
 library(readxl)
 library(lme4)
@@ -30,21 +19,19 @@ library(glmmTMB)
 library(MASS) 
 library(pscl)
 library(gridExtra)
-```
 
-```{r GLMM Felis catus}
 
-setwd("E:/Análisis_R/IMG/Barbe_etal2025_MGI")
+# GLMM Sighted cats #########################
 
 #Medium zone
-cats <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats <- read_excel("Fig3.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
   filter(zone == "Medium")
 
 #Low zone ---
-cats_exp <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats_exp <- read_excel("Fig3.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
@@ -56,34 +43,28 @@ cats_exp$year <- as.character(cats_exp$year)
 class(cats_exp$year)
 cats_exp$abundance
 
-```
-
-```{r GLMM LIBRERIA}
+##GLMM medium zone model for sighted cats--
 library(lme4)
 library(AICcmodavg)
 library(ggeffects)
 library(emmeans)
 library(performance)
-```
-```{r AIC rankings}
-#### GLMM medium zone model for sigthed cats----
 
-# Null model
+# Modelo nulo
 m0 <- glmer(
   abundance ~ offset(log(effort)) + (1 | transect),
   family = poisson,
   data = cats
 )
 
-# Year as fix factor
+# Año como efecto fijo
 m1 <- glmer(
   abundance ~ year + offset(log(effort)) + (1 | transect),
   family = poisson,
   data = cats
 )
-```
 
-```{r model selection}
+#Model selection
 cand_models <- list(m0, m1)
 mod_names <- c("Null", "Year")
 
@@ -95,22 +76,19 @@ aictab(
 
 aictab
 
-```
-```{r best model and predictions}
+#best model and predictions
 best_cat_model <- m1
 summary(best_cat_model)
 
 cats_pred <- ggpredict(
   best_cat_model,
   terms = "year",
-  type = "random"
+  type = "random"   # incluye variabilidad del efecto aleatorio
 )
 
 cats_pred
 
-```
-```{r emmeans}
-
+#eemeans
 emms_cats <- emmeans(
   best_cat_model,
   ~ year,
@@ -124,17 +102,13 @@ summary(emms_cats)
 pairs(emms_cats, adjust = "tukey")
 confint(pairs(emms_cats, adjust = "tukey"))
 
-```
-```{r best model}
 #Chequeos
 check_overdispersion(best_cat_model)
 check_model(best_cat_model)
-```
 
-```
-### L. wiegmannii lizard -----
-```{lizard GLM}
-#model---
+
+### L. wiegmannii lizard GLM ###################
+
 l.w_lizard <- read_excel("Fig4.Lw_lizard18-21_GLM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
@@ -142,7 +116,7 @@ l.w_lizard <- read_excel("Fig4.Lw_lizard18-21_GLM.xlsx") %>%
 
 #model
 mod_lizard1 <- glm(abundance ~ year +  offset(log(effort)),
-               family = "poisson", data = l.w_lizard)
+                   family = "poisson", data = l.w_lizard)
 
 
 check_overdispersion(mod_lizard1)
@@ -150,7 +124,7 @@ check_model(mod_lizard1)
 
 #'[Binomial negativa'] 
 mod_lizard2 <- glmmTMB(abundance ~ year,data=l.w_lizard,
-                          family="nbinom2") 
+                       family="nbinom2") 
 
 check_overdispersion(mod_lizard2)
 check_model(mod_lizard2)
@@ -165,8 +139,6 @@ lizard_predindex <- l.w_lizard$predicted/l.w_lizard$effort
 lizard_predict <- ggpredict(mod_lizard2, terms = "year", type = "fixed")
 lizard_predict
 
-```
-```{r Tukey}
 ## emmeans
 mod_lizard2 %>% 
   emmeans(list(pairwise~year), type = "response")
@@ -175,18 +147,16 @@ mod_lizard2 %>%
 emms_lizard <- emmeans(mod_lizard2, "year", type="response")
 summary(emms_lizard)
 confint(pairs(emms_lizard))
-```
 
-### Caprimulgus spp.-----
-```{r nightjars GLM}
-### Caprimulgus spp.-----
+### Caprimulgus spp. GLM#################################
+
 nightjars <- read_excel("Fig4b.Nightjars18-21_GLM.xlsx") %>% 
   rename(abundance = 1) %>%
   mutate(year = factor(year))
 
 #model
 mod_ng <- glm(abundance ~ year +  offset(log(effort)),
-                      family = "poisson", data = nightjars)
+              family = "poisson", data = nightjars)
 check_overdispersion(mod_ng)
 check_model(mod_ng)
 
@@ -199,8 +169,6 @@ nightjars_predindex <- nightjars$predicted/nightjars$effort
 nightjars_predict <- ggpredict(mod_ng, terms = "year", type = "fixed")
 nightjars_predict
 
-```
-```{r Tukey}
 ## emmeans
 mod_ng %>% 
   emmeans(list(pairwise~year), type = "response")
@@ -208,23 +176,8 @@ mod_ng %>%
 emms_ng <- emmeans(mod_ng, "year", type="response")
 summary(emms_ng) 
 confint(pairs(emms_ng))
-```
 
-
-####Tegu -----------
-```{r }
-
-# Tegu lizard GLMM---
-library(lme4)
-library(AICcmodavg)
-library(emmeans)
-library(performance)
-library(dplyr)
-library(readxl)
-```
-
-
-```{r modelos GLMM Tegu lizard}
+## Tegu lizard GLMM ###################################################################
 tegu <- read_excel("R data/Fig5.Tegu18-21_GLMM.xlsx")%>%
   rename(abundance = 1) %>%
   mutate(year = factor(year))
@@ -260,9 +213,7 @@ m_null <- glmer(
   data = tegu
 )
 
-```
-
-```{r comparo modelos}
+#models
 models <- list(
   full = m_full,
   additive = m_add,
@@ -276,76 +227,24 @@ aictab(
   modnames = names(models)
 )
 
-```
-```{r selecciono mejor modelo}
-
-best_tegu <- m_add   # suponiendo que este fue el mejor
+#best model
+best_tegu <- m_add  
 
 check_overdispersion(best_tegu)
 summary(best_tegu)
 
-```
-
-```{r AÑO estimacion de efectos RR}
+#emeans year
 emms_tegu_year <- emmeans(best_tegu, ~ year, type = "response")
 summary(emms_tegu_year)
 
 pairs(emms_tegu_year, type = "response")
 confint(pairs(emms_tegu_year))
-```
 
-```{r ZONA estimacion de efectos RR}
+#emmeans zone
 emms_tegu_zone <- emmeans(best_tegu, ~ zone, type = "response")
 summary(emms_tegu_zone)
 
 pairs(emms_tegu_zone, type = "response")
 confint(pairs(emms_tegu_zone))
 
-```
 
-############### Interviews --------------------------
-```{r Table5 interviews project need to continue}
-#Table 5. Need to continue the project data ----------------
-
-#Frequency of affirmative responses related to project continuation on MGI
-#Table5 matrix (data from Table5_data.xlsx)
-Table5 <- matrix(c(24, 2, 50, 1), nrow = 2, byrow = TRUE)
-#chi-square test
-projectchisq <- prop.test(Table5)
-print(projectchisq)
-```
-```{r Fig6. cat abundance perceptons interviews}
-#Fig.6. Community perceptions of cat abundance at the beginning of the project, by category (Surrounding houses and Island) and year (2019-2021)-------------
-
-#island (data from Fig6. Island data.xlsx) -------------------------------
-#2019 
-island_2019 <- matrix(c(11, 3, 14), nrow = 1, byrow = TRUE)
-colnames(island_2019) <- c("lower", "higher", "total")
-# lower vs. higher
-result_chi_cuad_island_2019 <- chisq.test(island_2019)
-result_chi_cuad_island_2019$expected
-print(result_chi_cuad_island_2019)
-
-#island 2021
-island_2021 <- matrix(c(20, 7, 27), nrow = 1, byrow = TRUE)
-colnames(island_2021) <- c("lower", "higher", "total")
-# lower vs. higher
-result_chi_cuad_island_2021 <- chisq.test(island_2021)
-result_chi_cuad_island_2021$expected
-print(result_chi_cuad_island_2021)
-
-#Surrounding houses (data from Fig6. Surrounding houses data.xlsx) ------------------
-#2019
-surroundings_2019 <- matrix(c(18, 2, 20), nrow = 1, byrow = TRUE)
-colnames(surroundings_2019) <- c("lower", "higher", "total")
-# lower vs. higher
-result_chi_cuad_surroundings_2019 <- chisq.test(surroundings_2019)
-print(result_chi_cuad_surroundings_2019)
-
-#2021
-surroundings_2021 <- matrix(c(26, 5, 31), nrow = 1, byrow = TRUE)
-colnames(surroundings_2021) <- c("lower", "higher", "total")
-# lower vs. higher
-result_chi_cuad_surroundings_2021 <- chisq.test(surroundings_2021)
-print(result_chi_cuad_surroundings_2021)
-```
