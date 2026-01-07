@@ -32,19 +32,17 @@ library(pscl)
 library(gridExtra)
 ```
 
-```{r GLMM Felis catus}
-
-setwd("E:/Análisis_R/IMG/Barbe_etal2025_MGI")
+```{r GLMM Sighted cats}
 
 #Medium zone
-cats <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats <- read_excel("R data/Fig3a,b.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
   filter(zone == "Medium")
 
 #Low zone ---
-cats_exp <- read_excel("Fig3.Cats18-21_GLMM.xlsx") %>%
+cats_exp <- read_excel("R data/Fig3a,b.SightedCats18-21_GLMM.xlsx") %>%
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate (index = abundance/effort)%>%
@@ -56,6 +54,43 @@ cats_exp$year <- as.character(cats_exp$year)
 class(cats_exp$year)
 cats_exp$abundance
 
+<<<<<<< HEAD
+=======
+#### GLMM medium zone model for sigthed cats----
+
+mod_cats <- glmer(abundance ~ year + (1|transect) + offset(log(effort)),
+                   family = "poisson", data = cats)
+
+check_overdispersion(mod_cats)
+check_model(mod_cats)
+summary(mod_cats)
+
+## Likelihood Ratio Test
+mod_cats %>% 
+  update(.~.-year) %>% 
+  anova(mod_cats, test = "Chisq") #AIC
+
+#predicted values
+cats$predicted <- predict(mod_cats, type= "response") 
+cats$pred_index <- cats$predicted/cats$effort
+
+#predicted per year
+year_predicted <- predict(mod_cats, type="response")
+year_predicted
+
+#random predicted values with CI 
+cats_predict_random <- ggpredict(mod_cats, terms = "year", type = "random")
+cats_predict_random
+```
+```{r Tukey}
+mod_cats %>% 
+  emmeans(list(pairwise~year), type="response"   )
+  
+# CI
+  emms_cats <- emmeans(mod_cats, "year", type="response")  
+  summary(emms_cats)
+  confint(pairs(emms_cats))
+>>>>>>> 618f40bf3e2ed08b1e34710d8dd0d1286fb9ad07
 ```
 
 ```{r GLMM LIBRERIA}
@@ -133,9 +168,14 @@ check_model(best_cat_model)
 
 ```
 ### L. wiegmannii lizard -----
+<<<<<<< HEAD
 ```{lizard GLM}
 #model---
 l.w_lizard <- read_excel("Fig4.Lw_lizard18-21_GLM.xlsx") %>%
+=======
+```{r lizard GLM}
+l.w_lizard <- read_excel("R data/Fig4a.Lw_lizard18-21_GLM.xlsx") %>%
+>>>>>>> 618f40bf3e2ed08b1e34710d8dd0d1286fb9ad07
   rename(abundance = 1) %>%
   mutate(year = factor(year)) %>%
   mutate(index = abundance/effort)
@@ -179,8 +219,12 @@ confint(pairs(emms_lizard))
 
 ### Caprimulgus spp.-----
 ```{r nightjars GLM}
+<<<<<<< HEAD
 ### Caprimulgus spp.-----
 nightjars <- read_excel("Fig4b.Nightjars18-21_GLM.xlsx") %>% 
+=======
+nightjars <- read_excel("R data/Fig4b.Nightjars18-21_GLM.xlsx") %>% 
+>>>>>>> 618f40bf3e2ed08b1e34710d8dd0d1286fb9ad07
   rename(abundance = 1) %>%
   mutate(year = factor(year))
 
@@ -210,6 +254,7 @@ summary(emms_ng)
 confint(pairs(emms_ng))
 ```
 
+<<<<<<< HEAD
 
 ####Tegu -----------
 ```{r }
@@ -225,6 +270,9 @@ library(readxl)
 
 
 ```{r modelos GLMM Tegu lizard}
+=======
+```{r GLMM Tegu lizard}
+>>>>>>> 618f40bf3e2ed08b1e34710d8dd0d1286fb9ad07
 tegu <- read_excel("R data/Fig5.Tegu18-21_GLMM.xlsx")%>%
   rename(abundance = 1) %>%
   mutate(year = factor(year))
@@ -302,7 +350,6 @@ pairs(emms_tegu_zone, type = "response")
 confint(pairs(emms_tegu_zone))
 
 ```
-
 ############### Interviews --------------------------
 ```{r Table5 interviews project need to continue}
 #Table 5. Need to continue the project data ----------------
